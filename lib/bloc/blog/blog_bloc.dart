@@ -23,9 +23,9 @@ class BlogBloc extends Bloc<BlogEvent, BlogState> {
 
   Stream<BlogState> _getdata() async* {
     try {
-      final blog = await eventsService.getEvent();
+      final blogs = await eventsService.getEvent();
       // eventsService.getEvent();
-      yield state.copyWith(blogModel: blog);
+      yield state.copyWith(blogsModel: blogs);
     } on BlogServiceExeption {}
   }
 }

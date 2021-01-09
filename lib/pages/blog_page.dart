@@ -5,6 +5,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/style.dart';
 
 import 'package:test_meet2go/bloc/blog/blog_bloc.dart';
+import 'package:test_meet2go/models/blog_model.dart';
 
 import 'package:test_meet2go/utils/routes.dart';
 
@@ -35,16 +36,28 @@ class BlogPage extends StatelessWidget {
           ),
         ),
       ),
-      body: CustomScrollView(
-        slivers: <Widget>[
-          if (_isPortrait) _header,
-          SliverList(
-            delegate: SliverChildListDelegate([
-              SizedBox(height: 10.0),
-              ...List.generate(5, (int i) => _CardBlogWidget()),
-            ]),
-          ),
-        ],
+      body: BlocBuilder<BlogBloc, BlogState>(
+        builder: (context, state) {
+          if (state.blogsModel == null) {
+            return Center(
+                child: CircularProgressIndicator(
+              valueColor: new AlwaysStoppedAnimation<Color>(Colors.yellow),
+            ));
+          } else {
+            return CustomScrollView(
+              slivers: <Widget>[
+                if (_isPortrait) _header,
+                SliverList(
+                  delegate: SliverChildListDelegate([
+                    SizedBox(height: 10.0),
+                    ...List.generate(state.blogsModel.length,
+                        (int i) => _CardBlogWidget(state.blogsModel[i])),
+                  ]),
+                ),
+              ],
+            );
+          }
+        },
       ),
     );
   }
@@ -69,15 +82,17 @@ class BlogPage extends StatelessWidget {
 }
 
 class _CardBlogWidget extends StatelessWidget {
-  const _CardBlogWidget({
-    Key key,
-  }) : super(key: key);
+  const _CardBlogWidget(
+    this.blogModel,
+  );
 
-  Widget _titleBlog(BlogState state) {
+  final BlogModel blogModel;
+
+  Widget _titleBlog() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Text(
-        state.blogModel.title.rendered,
+        blogModel.title.rendered,
         style: TextStyle(
           fontFamily: 'RobotoMono',
           fontSize: 20.0,
@@ -114,10 +129,10 @@ class _CardBlogWidget extends StatelessWidget {
     );
   }
 
-  Widget _shortDescriptionblog(BlogState state) {
+  Widget _shortDescriptionblog() {
     return Container(
       child: Html(
-        data: state.blogModel.excerpt.rendered,
+        data: blogModel.excerpt.rendered,
         // blacklistedElements: ["[&hellip;]"],
         // shrinkWrap: true,
         style: {
@@ -137,54 +152,43 @@ class _CardBlogWidget extends StatelessWidget {
 
     final _screenSize = MediaQuery.of(context).size;
 
-    return BlocBuilder<BlogBloc, BlogState>(
-      builder: (context, state) {
-        if (state.blogModel == null) {
-          return Center(
-              child: CircularProgressIndicator(
-            valueColor: new AlwaysStoppedAnimation<Color>(Colors.yellow),
-          ));
-        } else {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-            child: GestureDetector(
-              onTap: () => Navigator.pushNamed(context, AppRoutes.EVENT_DETAIL,
-                  arguments: state.blogModel),
-              child: Card(
-                elevation: 5.0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: _isPortrait
-                    ? Column(
-                        children: <Widget>[
-                          _imageBlog(_isPortrait, _screenSize),
-                          _titleBlog(state),
-                          _shortDescriptionblog(state),
-                        ],
-                      )
-                    : Row(
-                        children: <Widget>[
-                          _imageBlog(_isPortrait, _screenSize),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0, horizontal: 10.0),
-                              child: Column(
-                                children: <Widget>[
-                                  _titleBlog(state),
-                                  _shortDescriptionblog(state),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      child: GestureDetector(
+        onTap: () => Navigator.pushNamed(context, AppRoutes.EVENT_DETAIL,
+            arguments: blogModel),
+        child: Card(
+          elevation: 5.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: _isPortrait
+              ? Column(
+                  children: <Widget>[
+                    _imageBlog(_isPortrait, _screenSize),
+                    _titleBlog(),
+                    _shortDescriptionblog(),
+                  ],
+                )
+              : Row(
+                  children: <Widget>[
+                    _imageBlog(_isPortrait, _screenSize),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 10.0),
+                        child: Column(
+                          children: <Widget>[
+                            _titleBlog(),
+                            _shortDescriptionblog(),
+                          ],
+                        ),
                       ),
-              ),
-            ),
-          );
-        }
-      },
+                    ),
+                  ],
+                ),
+        ),
+      ),
     );
   }
 }

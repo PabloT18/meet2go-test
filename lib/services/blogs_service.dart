@@ -8,7 +8,7 @@ import 'package:test_meet2go/models/blog_model.dart';
 class BlogServiceExeption implements Exception {}
 
 class BlogsService {
-  Future<BlogModel> getEvent() async {
+  Future<List<BlogModel>> getEvent() async {
     final response = await http.get("${Environments.apiURL}", headers: {
       'Content-Type': 'application/json',
     });
@@ -19,10 +19,13 @@ class BlogsService {
       throw BlogServiceExeption();
     }
 
-    final event = new BlogModel.fromJson(decodeData[0]);
+    // final List<BlogModel> event = new BlogModel.fromJson(decodeData[0]);
+
+    final List<BlogModel> blogs =
+        decodeData.map((blog) => BlogModel.fromJson(blog)).toList();
 
     print(decodeData);
-    print("dafadf ${event.title.rendered}");
-    return event;
+    // print("dafadf ${event.title.rendered}");
+    return blogs;
   }
 }

@@ -2,14 +2,14 @@ part of 'blog_bloc.dart';
 
 @immutable
 class BlogState {
-  final BlogModel blogModel;
+  final List<BlogModel> blogsModel;
 
   BlogState({
-    this.blogModel,
+    this.blogsModel,
   });
 
   BlogState copyWith({
-    BlogModel blogModel,
+    List<BlogModel> blogsModel,
   }) =>
-      BlogState(blogModel: blogModel ?? this.blogModel);
+      BlogState(blogsModel: blogsModel ?? this.blogsModel);
 }

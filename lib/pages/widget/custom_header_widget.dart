@@ -14,10 +14,7 @@ class SliverCustomHeaderDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    // return SizedBox.expand(
-    //   child: child,
     return child;
-    //TOD)" crear chil aqui mismo "
   }
 
   @override

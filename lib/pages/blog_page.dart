@@ -24,59 +24,67 @@ class BlogPage extends StatelessWidget {
     final _header = _sliverHeader();
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black87,
-        centerTitle: true,
-        title: Container(
-          height: 45,
-          child: Image(
-            fit: BoxFit.fill,
-            image:
-                NetworkImage('https://www.meet2go.com/_nuxt/img/6a66ced.png'),
+        appBar: AppBar(
+          backgroundColor: Colors.black87,
+          centerTitle: true,
+          title: Container(
+            height: 45,
+            child: Image(
+              fit: BoxFit.fill,
+              image:
+                  NetworkImage('https://www.meet2go.com/_nuxt/img/6a66ced.png'),
+            ),
           ),
         ),
-      ),
-      body: BlocBuilder<BlogBloc, BlogState>(
-        builder: (context, state) {
-          if (state.blogsModel == null) {
-            return Center(
-                child: CircularProgressIndicator(
-              valueColor: new AlwaysStoppedAnimation<Color>(Colors.yellow),
-            ));
-          } else {
-            return CustomScrollView(
-              slivers: <Widget>[
-                if (_isPortrait) _header,
-                SliverList(
-                  delegate: SliverChildListDelegate([
-                    SizedBox(height: 10.0),
-                    ...List.generate(state.blogsModel.length,
-                        (int i) => _CardBlogWidget(state.blogsModel[i])),
-                  ]),
-                ),
-              ],
-            );
-          }
-        },
-      ),
-    );
+        body: CustomScrollView(
+          slivers: <Widget>[
+            if (_isPortrait) _header,
+            SliverList(
+              delegate: SliverChildListDelegate([
+                SizedBox(height: 10.0),
+                BlocBuilder<BlogBloc, BlogState>(builder: (context, state) {
+                  if (state.blogsModel == null) {
+                    return Center(
+                        child: CircularProgressIndicator(
+                      valueColor:
+                          new AlwaysStoppedAnimation<Color>(Colors.yellow),
+                    ));
+                  } else {
+                    return Column(
+                        children:
+                            //Codigo Funcional
+                            // List.generate(state.blogsModel.length * 2,
+                            //     (int i) => _CardBlogWidget(state.blogsModel[i])));
+
+                            // Codigo prueba varios elementos
+                            List.generate(
+                                state.blogsModel.length * 2,
+                                (int i) =>
+                                    _CardBlogWidget(state.blogsModel[0])));
+                  }
+                }),
+              ]),
+            ),
+          ],
+        ));
   }
 
   Widget _sliverHeader() {
     return SliverAppBar(
       // elevation: 10.0,
+
       backgroundColor: Colors.transparent,
       expandedHeight: 250.0,
       floating: true,
       flexibleSpace: FlexibleSpaceBar(
         background: FadeInImage(
+          height: 250.0,
           fit: BoxFit.fill,
           image: NetworkImage(
               "https://www.meet2go.com/wp-content/uploads/2020/12/cuadradoevento.jpg"),
           placeholder: AssetImage('assets/img/loading.gif'),
         ),
       ),
-      // title: Text("Blog"),
     );
   }
 }
@@ -103,8 +111,6 @@ class _CardBlogWidget extends StatelessWidget {
   }
 
   Widget _imageBlog(bool _isPortrait, Size screenSize) {
-    // Radius.zero
-
     return Container(
       margin: _isPortrait ? EdgeInsets.only(bottom: 10.0) : null,
       padding: !_isPortrait ? EdgeInsets.only(left: 10.0) : null,
@@ -133,8 +139,6 @@ class _CardBlogWidget extends StatelessWidget {
     return Container(
       child: Html(
         data: blogModel.excerpt.rendered,
-        // blacklistedElements: ["[&hellip;]"],
-        // shrinkWrap: true,
         style: {
           "p": Style(
             padding: const EdgeInsets.symmetric(horizontal: 8),

@@ -21,6 +21,7 @@ class BlogDetailPage extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
+        //Si la etiqueta ajaja era esta jajaja :D te felicito 
         child: Html(
           data: blogModel.content.rendered,
         ),

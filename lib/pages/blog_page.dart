@@ -12,6 +12,8 @@ import 'package:test_meet2go/utils/routes.dart';
 class BlogPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
+    //Entiendo lo que quieres demostrar y me parece genial lo que hiciste 
     final _isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
@@ -38,6 +40,7 @@ class BlogPage extends StatelessWidget {
         ),
         body: CustomScrollView(
           slivers: <Widget>[
+              // Muy buena implmentacion 
             if (_isPortrait) _header,
             SliverList(
               delegate: SliverChildListDelegate([
